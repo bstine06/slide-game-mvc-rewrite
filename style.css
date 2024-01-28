@@ -1,0 +1,22 @@
+body {
+  background-color: #181818;
+  color: white;
+}
+
+.game-container {
+  width: 600px;
+  height: 600px;
+  background-color: red;
+}
+
+.obstacle {
+  width: 10%;
+  height: 10%;
+  background-color: #aaa;
+  position: absolute;
+  left:0%;
+  top:0%;
+  box-shadow: 2px 2px 5px black;
+  animation-duration: 0.3s;
+  animation-timing-function: linear;
+}
