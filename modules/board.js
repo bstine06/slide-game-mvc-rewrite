@@ -83,7 +83,7 @@ export class Board {
     do {
       randomX = Math.floor(Math.random()*this.size);
       randomY = Math.floor(Math.random()*this.size);
-    } while (this.getObstacleXYs().filter((e)=>(e[0]===randomX && e[1]===randomY)).length!==0);
+    } while (this.getObstacleXYs().concat([this.player.getXY()]).filter((e)=>(e[0]===randomX && e[1]===randomY)).length!==0);
     return [randomX,randomY];
   }
   getObstacleXYs(){

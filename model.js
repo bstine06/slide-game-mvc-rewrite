@@ -29,7 +29,7 @@ export class Model {
   }
 
   initialize() {
-    this.generateRandomBoard(12, 20);
+    this.generateRandomBoard(30, 200);
   }
 
   handleKeyPress(data) {
