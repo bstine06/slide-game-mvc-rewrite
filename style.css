@@ -21,3 +21,24 @@ body {
   animation-duration: 0.3s;
   animation-timing-function: linear;
 }
+
+.player {
+  width: 10%;
+  height: 10%;
+  background-color: red;
+  position: absolute;
+  left:0%;
+  top:0%;
+  transition: all 0.3s ease;
+  box-shadow: 2px 2px 5px black ;
+}
+
+.finish {
+  width: 10%;
+  height: 10%;
+  background-color: hsl(120, 74%, 19%);
+  position: absolute;
+  left:0%;
+  top:0%;
+  box-shadow: 2px 2px 5px black inset;
+}

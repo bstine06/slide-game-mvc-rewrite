@@ -30,7 +30,7 @@ export class Model {
     this.board = new Board();
   }
 
-  initialize() {
+  initialize() {``
     this.generateRandomBoard(12, 20);
   }
 }

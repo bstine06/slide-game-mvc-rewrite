@@ -6,6 +6,8 @@ export class Board {
     this.countObstacles;
     this.obstacles = [];
     this.resetToThisState;
+    this.player;
+    this.finish;
   }
   generateRandomBoard(size, countObstacles) {
     this.size = size;
