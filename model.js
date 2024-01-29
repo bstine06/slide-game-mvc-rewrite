@@ -6,23 +6,21 @@ export class Model {
     this.board = new Board();
     this.controller = controller;
     this.eventDispatcher = eventDispatcher;
-    this.resetBoardToThisState = this.board;
 
     this.eventDispatcher.addEventListener('keyPressed', (data) => {
-      console.log('Model received keyPressed event:', data);
+      this.handleKeyPress(data);
     });
   }
 
   generateRandomBoard(size, countObstacles) {
     this.board.generateRandomBoard(size, countObstacles);
-    this.resetBoardToThisState = this.board;
     console.log("Model: generating board...");
     this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
   }
 
   resetBoard() {
-    this.board = this.resetBoardToThisState;
     console.log("Model: resetting board...");
+    this.board.reset();
     this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
   }
 
@@ -30,7 +28,36 @@ export class Model {
     this.board = new Board();
   }
 
-  initialize() {``
+  initialize() {
     this.generateRandomBoard(12, 20);
+  }
+
+  handleKeyPress(data) {
+    switch (data) {
+      case 'ArrowLeft': 
+      case 'a':
+        if (this.board.player.setXYifNew(this.board.findLeftMoveDestination(this.board.player.getXY()))){
+          this.eventDispatcher.dispatchEvent('updatePlayerXY', this.board.player.getXY());
+        };
+        break;
+      case 'ArrowRight':
+      case 'd':
+        if (this.board.player.setXYifNew(this.board.findRightMoveDestination(this.board.player.getXY()))){
+          this.eventDispatcher.dispatchEvent('updatePlayerXY', this.board.player.getXY());
+        };
+        break;
+      case 'ArrowUp':
+      case 'w':
+        if (this.board.player.setXYifNew(this.board.findUpMoveDestination(this.board.player.getXY()))){
+          this.eventDispatcher.dispatchEvent('updatePlayerXY', this.board.player.getXY());
+        };
+        break;
+      case 'ArrowDown':
+      case 's':
+        if (this.board.player.setXYifNew(this.board.findDownMoveDestination(this.board.player.getXY()))){
+          this.eventDispatcher.dispatchEvent('updatePlayerXY', this.board.player.getXY());
+        };
+        break;
+    };
   }
 }

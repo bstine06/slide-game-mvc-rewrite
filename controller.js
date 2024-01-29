@@ -21,6 +21,11 @@ class Controller {
       this.view.renderBoard(board);
     });
 
+    this.eventDispatcher.addEventListener('updatePlayerXY', (newXY) => {
+      console.log(`Controller: updating player XY to ${newXY}`);
+      this.view.updatePlayerXY(newXY);
+    });
+
     // Now call the initialize method to generate the board
     this.model.initialize();
   }

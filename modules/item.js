@@ -1,33 +1,25 @@
 export class Item {
   constructor(boardSize, itemType) {
-    // this.gameDomElement = document.getElementById("game");
     this.x = 5;
     this.y = 5;
     this.itemType = itemType;
-    // this.node = document.createElement("div");
-    // this.style = this.node.style;
-    // this.node.classList.add(itemType);
-    // this.displayWithAnimation();
-    // this.updateDisplay();
-    // this.style.width = (100/this.boardSize)+"%";
-    // this.style.height = (100/this.boardSize)+"%";
   }
-  // updateDisplay() {
-  //   this.style.left= this.x * (100/this.boardSize) + "%";
-  //   this.style.top = this.y * (100/this.boardSize) + "%";
-  // }
   setX(x){
     this.x=x;
-    // this.updateDisplay();
   }
   setY(y){
     this.y=y;
-    // this.updateDisplay();
   }
   setXY(xyPair){
     this.x=xyPair[0];
     this.y=xyPair[1];
-    // this.updateDisplay();
+  }
+  setXYifNew(xyPair){
+    if(xyPair[0]!==this.x || xyPair[1]!==this.y){
+      this.setXY(xyPair);
+      return true;
+    }
+    return false;
   }
   getX(){
     return this.x;

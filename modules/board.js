@@ -92,12 +92,12 @@ export class Board {
 
   reset(){
     this.obstacles = this.resetToThisState[0];
-    this.obstacles.filter(o => o.node.parentNode===null).forEach(o => {
-      o.displayWithAnimation();
-    });
+    // this.obstacles.filter(o => o.node.parentNode===null).forEach(o => {
+    //   o.displayWithAnimation();
+    // });
     this.player.setXY(this.resetToThisState[1]);
-    this.player.node.classList.remove("player-wins");
-    this.player.node.style.backgroundColor = "red";
+    // this.player.node.classList.remove("player-wins");
+    // this.player.node.style.backgroundColor = "red";
     this.finish.setXY(this.resetToThisState[2]);
   }
   finishLevel(){
