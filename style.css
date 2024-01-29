@@ -58,3 +58,19 @@ body {
     opacity: 0%;
   }
 }
+
+.incoming-animation {
+  animation-name: ungrowfade;
+}
+
+@keyframes ungrowfade {
+  from {
+    transform: scale(1.2);
+    opacity: 0%;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 100%;
+  }
+}

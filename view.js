@@ -36,7 +36,6 @@ export class View {
       obstacleNode.style.backgroundColor = `hsl(0,0%,${lightness}%)`;
       obstacleNode.style.zIndex = Math.floor(Math.random()*board.countObstacles + 3);
       this.renderNodeSizeAndPosition(obstacleNode, obstacle.getX(), obstacle.getY());
-      this.gameContainer.appendChild(obstacleNode);
     });
     //render player
     this.playerNode = document.createElement('div');
@@ -53,12 +52,18 @@ export class View {
     node.style.width = this.sizingFactor + '%';
     node.style.left = x * this.sizingFactor + '%';
     node.style.top = y * this.sizingFactor + '%';
+    node.classList.add('incoming-animation');
     this.gameContainer.appendChild(node);
+    setTimeout(() => {
+      node.classList.remove('incoming-animation');
+    }, 600);
   }
 
   resetBoard(board) {
     console.log('View: updating board render...');
     this.updatePlayerXY(board.player.getXY());
+    this.renderBoard(board);
+    // board.obstacles.forEach((o) => o.id)
   }
 
   clearBoard() {
@@ -76,7 +81,7 @@ export class View {
       obstacleNode.classList.add('outgoing-animation');
       setTimeout(() => {
         obstacleNode.style.display = 'none';
-      }, 280)
+      }, 280);
     });
   }
 }

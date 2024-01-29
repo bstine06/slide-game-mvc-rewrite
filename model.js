@@ -21,7 +21,7 @@ export class Model {
   resetBoard() {
     console.log("Model: resetting board...");
     this.board.reset();
-    this.eventDispatcher.dispatchEvent('updateBoard', this.board);
+    this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
   }
 
   clearBoard() {

@@ -28,7 +28,7 @@ export class Board {
     // });
     this.player.setXY(this.findRandomUnoccupiedCoordinates());
     this.finish.setXY(this.findRandomUnoccupiedCoordinates());
-    this.resetToThisState = [this.obstacles, this.player.getXY(), this.finish.getXY()];
+    this.resetToThisState = this.player.getXY();
   }
 
 
@@ -91,31 +91,14 @@ export class Board {
   }
 
   reset(){
-    this.obstacles = this.resetToThisState[0];
-    // this.obstacles.filter(o => o.node.parentNode===null).forEach(o => {
-    //   o.displayWithAnimation();
-    // });
-    this.player.setXY(this.resetToThisState[1]);
-    // this.player.node.classList.remove("player-wins");
-    // this.player.node.style.backgroundColor = "red";
-    this.finish.setXY(this.resetToThisState[2]);
+    this.obstacles.forEach((o)=>o.turnOn());
+    this.player.setXY(this.resetToThisState);
   }
   finishLevel(){
     if (this.player.getX() !== this.finish.getX() || this.player.getY() !== this.finish.getY()) return;
     setTimeout(()=>{
       this.animateFinish();
-      //this.clearBoard();
-      this.displayPostGame();
     }, "280");
-  }
-  clearBoard(){
-    this.obstacles.forEach(o => o.eraseWithAnimation());
-    this.player.eraseWithAnimation();
-    this.finish.eraseWithAnimation();
-    this.obstacles = [];
-  }
-  displayPostGame(){
-    console.log("POSTGAME");
   }
   animateFinish(){
     this.player.style.backgroundColor = "rgb(26, 175, 26)";
