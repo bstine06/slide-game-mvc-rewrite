@@ -4,12 +4,6 @@ export class View {
     this.eventDispatcher = eventDispatcher;
     this.gameContainer;
     this.renderContainer();
-
-    // Example: Adding an event listener
-    this.eventDispatcher.addEventListener('keyPressed', (data) => {
-      console.log('View recieved keyPress event:', data);
-      // Update the view accordingly
-    });
   }
 
   renderContainer() {
@@ -18,25 +12,28 @@ export class View {
     this.gameContainer  = document.createElement('div');
     this.gameContainer.classList.add('game-container');
 
-    // Add a click event listener to the button
     resetBtn.addEventListener('click', () => {
-      // Dispatch a custom event when the button is clicked
-      this.eventDispatcher.dispatchEvent('resetBtnClicked', 'Reset Button clicked!');
+      this.eventDispatcher.dispatchEvent('resetBtnClicked', 'Reset Button clicked');
     });
 
-    // Append the button to the document body
     document.body.appendChild(resetBtn);
     document.body.appendChild(this.gameContainer);
   }
 
   renderBoard(board) {
-    console.log('View rendering board...');
-    console.log(board);
+    this.clearBoard();
+    console.log('View: rendering board...');
+    const sizingFactor = 100/board.size;
     board.obstacles.forEach(obstacle => {
       const obstacleNode = document.createElement('div');
       obstacleNode.classList.add('obstacle');
-      obstacleNode.style.top = obstacle.getY() * 10 + '%';
-      obstacleNode.style.left = obstacle.getX() * 10 + '%';
+      obstacleNode.style.height = sizingFactor + '%';
+      obstacleNode.style.width = sizingFactor + '%';
+      obstacleNode.style.top = obstacle.getY() * sizingFactor + '%';
+      obstacleNode.style.left = obstacle.getX() * sizingFactor + '%';
+      let lightness = Math.floor(Math.random() * 20 + 40);
+      obstacleNode.style.backgroundColor = `hsl(0,0%,${lightness}%)`;
+      obstacleNode.style.zIndex = Math.floor(Math.random()*board.countObstacles + 3);
       this.gameContainer.appendChild(obstacleNode);
     });
   }
@@ -44,5 +41,4 @@ export class View {
   clearBoard() {
     this.gameContainer.innerHTML = '';
   }
-  // Your other view-related methods here
 }

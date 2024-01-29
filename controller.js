@@ -13,17 +13,13 @@ class Controller {
     });
 
     this.eventDispatcher.addEventListener('resetBtnClicked', (message) => {
-      console.log(message);
-      this.model.clearBoard();
-      this.view.clearBoard();
+      console.log(`Controller: ${message}`);
+      this.model.resetBoard();
     });
 
     this.eventDispatcher.addEventListener('boardGenerated', (board) => {
-      console.log('Controller recieved generated board from Model');
-      console.log('Updating view...');
       this.view.renderBoard(board);
     });
-    console.log(this.eventDispatcher);
 
     // Now call the initialize method to generate the board
     this.model.initialize();

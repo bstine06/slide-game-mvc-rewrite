@@ -14,9 +14,6 @@ export class Board {
     this.finish = new Item(size, "finish");
     for (let i=0; i<this.countObstacles; i++) {
       let newObstacle = new Item(this.size, "obstacle");
-      // let lightness = Math.floor(Math.random() * 20 + 40);
-      // newObstacle.style.backgroundColor = `hsl(0,0%,${lightness}%)`;
-      // newObstacle.style.zIndex = i+3;
       newObstacle.setXY(this.findRandomUnoccupiedCoordinates());
       this.obstacles.push(newObstacle);
     }

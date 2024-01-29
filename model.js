@@ -6,22 +6,23 @@ export class Model {
     this.board = new Board();
     this.controller = controller;
     this.eventDispatcher = eventDispatcher;
+    this.resetBoardToThisState = this.board;
 
-    // Example: Adding an event listener
     this.eventDispatcher.addEventListener('keyPressed', (data) => {
       console.log('Model received keyPressed event:', data);
-      // Update the view accordingly
     });
-
-    // Don't generate the board in the constructor
-    // this.generateRandomBoard(10, 20);
   }
-
-  // Your data-related methods here
 
   generateRandomBoard(size, countObstacles) {
     this.board.generateRandomBoard(size, countObstacles);
-    console.log("generating board...");
+    this.resetBoardToThisState = this.board;
+    console.log("Model: generating board...");
+    this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
+  }
+
+  resetBoard() {
+    this.board = this.resetBoardToThisState;
+    console.log("Model: resetting board...");
     this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
   }
 
@@ -30,7 +31,6 @@ export class Model {
   }
 
   initialize() {
-    // Call this method after setting up the controller
-    this.generateRandomBoard(10, 20);
+    this.generateRandomBoard(12, 20);
   }
 }
