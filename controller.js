@@ -21,6 +21,14 @@ class Controller {
       this.view.renderBoard(board);
     });
 
+    this.eventDispatcher.addEventListener('updateBoard', (board) => {
+      this.view.resetBoard(board);
+    });
+
+    this.eventDispatcher.addEventListener('explosionTriggered', (explodedItemIds) => {
+      this.view.explode(explodedItemIds);
+    })
+
     this.eventDispatcher.addEventListener('updatePlayerXY', (newXY) => {
       console.log(`Controller: updating player XY to ${newXY}`);
       this.view.updatePlayerXY(newXY);

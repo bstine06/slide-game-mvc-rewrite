@@ -42,3 +42,19 @@ body {
   top:0%;
   box-shadow: 2px 2px 5px black inset;
 }
+
+.outgoing-animation {
+  animation-name: growfade;
+}
+
+@keyframes growfade {
+  from {
+    transform: scale(1);
+    opacity: 100%;
+  }
+
+  to {
+    transform: scale(1.2);
+    opacity: 0%;
+  }
+}

@@ -1,4 +1,4 @@
-import { Item } from './item.js';
+import { Item, Obstacle } from './item.js';
 
 export class Board {
   constructor() {
@@ -10,22 +10,22 @@ export class Board {
     this.finish;
   }
   generateRandomBoard(size, countObstacles) {
-    this.size = size;
+    this.size = size
     this.countObstacles = countObstacles;
-    this.player = new Item(size, "player");
-    this.finish = new Item(size, "finish");
+    this.player = new Item("player");
+    this.finish = new Item("finish");
     for (let i=0; i<this.countObstacles; i++) {
-      let newObstacle = new Item(this.size, "obstacle");
+      let newObstacle = new Obstacle("obstacle", i);
       newObstacle.setXY(this.findRandomUnoccupiedCoordinates());
       this.obstacles.push(newObstacle);
     }
-    this.obstacles.sort((a, b) => {
-      if (a.x !== b.x) {
-        return a.x - b.x;
-      } else {
-        return a.y - b.y;
-      }
-    });
+    // this.obstacles.sort((a, b) => {
+    //   if (a.x !== b.x) {
+    //     return a.x - b.x;
+    //   } else {
+    //     return a.y - b.y;
+    //   }
+    // });
     this.player.setXY(this.findRandomUnoccupiedCoordinates());
     this.finish.setXY(this.findRandomUnoccupiedCoordinates());
     this.resetToThisState = [this.obstacles, this.player.getXY(), this.finish.getXY()];
@@ -34,7 +34,7 @@ export class Board {
 
 
 
-  findAvailableMoves(currentXY, board) {
+  findAvailableMoves(currentXY) {
     let availableMoves = [];
     availableMoves.push(this.findLeftMoveDestination(currentXY));
     availableMoves.push(this.findRightMoveDestination(currentXY));
@@ -87,7 +87,7 @@ export class Board {
     return [randomX,randomY];
   }
   getObstacleXYs(){
-    return this.obstacles.map(o => o.getXY());
+    return this.obstacles.filter(o => o.isOn === true).map(o => o.getXY());
   }
 
   reset(){
@@ -132,7 +132,9 @@ export class Board {
   triggerExplosion(){
     let xRange = [this.player.getX()-1, this.player.getX(), this.player.getX()+1];
     let yRange = [this.player.getY()-1, this.player.getY(), this.player.getY()+1];
-    this.obstacles.filter(o => xRange.includes(o.getX()) && yRange.includes(o.getY())).forEach(o => o.eraseWithAnimation());
-    this.obstacles = (this.obstacles.filter(o => !(xRange.includes(o.getX()) && yRange.includes(o.getY()))));
+    const explodedItems = this.obstacles.filter(o => xRange.includes(o.getX()) && yRange.includes(o.getY()));  
+    explodedItems.forEach(o => o.turnOff());      
+    return explodedItems.map(o => o.id);
+    // this.obstacles = (this.obstacles.filter(o => !(xRange.includes(o.getX()) && yRange.includes(o.getY()))));
   }
 }

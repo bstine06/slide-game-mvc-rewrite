@@ -1,5 +1,5 @@
 export class Item {
-  constructor(boardSize, itemType) {
+  constructor(itemType) {
     this.x = 5;
     this.y = 5;
     this.itemType = itemType;
@@ -30,6 +30,7 @@ export class Item {
   getXY(){
     return [this.x, this.y];
   }
+
   // eraseWithAnimation(){
   //   this.node.classList.add("outgoing-animation");
   //   setTimeout(() => {
@@ -44,4 +45,18 @@ export class Item {
   //     this.node.classList.remove("incoming-animation");
   //   }, "280");
   // }
+}
+
+export class Obstacle extends Item {
+  constructor(itemType, id) {
+    super(itemType);
+    this.isOn = true;
+    this.id = id;
+  }
+  turnOff(){
+    this.isOn = false;
+  }
+  turnOn() {
+    this.isOn = true;
+  }
 }

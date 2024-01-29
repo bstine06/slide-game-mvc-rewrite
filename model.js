@@ -21,7 +21,7 @@ export class Model {
   resetBoard() {
     console.log("Model: resetting board...");
     this.board.reset();
-    this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
+    this.eventDispatcher.dispatchEvent('updateBoard', this.board);
   }
 
   clearBoard() {
@@ -57,6 +57,13 @@ export class Model {
         if (this.board.player.setXYifNew(this.board.findDownMoveDestination(this.board.player.getXY()))){
           this.eventDispatcher.dispatchEvent('updatePlayerXY', this.board.player.getXY());
         };
+        break;
+      case 'b':
+      case 'e':
+        let explodedItemIds = this.board.triggerExplosion();
+        if (explodedItemIds.length > 0) {
+          this.eventDispatcher.dispatchEvent('explosionTriggered', explodedItemIds);
+        }
         break;
     };
   }

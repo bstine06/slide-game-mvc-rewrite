@@ -31,6 +31,7 @@ export class View {
     board.obstacles.forEach(obstacle => {
       const obstacleNode = document.createElement('div');
       obstacleNode.classList.add('obstacle');
+      obstacleNode.id = `obstacle${obstacle.id}`;
       let lightness = Math.floor(Math.random() * 20 + 40);
       obstacleNode.style.backgroundColor = `hsl(0,0%,${lightness}%)`;
       obstacleNode.style.zIndex = Math.floor(Math.random()*board.countObstacles + 3);
@@ -55,6 +56,11 @@ export class View {
     this.gameContainer.appendChild(node);
   }
 
+  resetBoard(board) {
+    console.log('View: updating board render...');
+    this.updatePlayerXY(board.player.getXY());
+  }
+
   clearBoard() {
     this.gameContainer.innerHTML = '';
   }
@@ -62,5 +68,15 @@ export class View {
   updatePlayerXY(newXY) {
     this.playerNode.style.left = newXY[0] * this.sizingFactor + '%';
     this.playerNode.style.top  = newXY[1] * this.sizingFactor + '%';
+  }
+
+  explode(explodedItemIds) {
+    explodedItemIds.forEach((id) => {
+      const obstacleNode = document.getElementById(`obstacle${id}`)
+      obstacleNode.classList.add('outgoing-animation');
+      setTimeout(() => {
+        obstacleNode.style.display = 'none';
+      }, 280)
+    });
   }
 }
