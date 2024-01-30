@@ -12,13 +12,21 @@ export class Model {
     });
   }
 
-  generateRandomBoard(size, countObstacles) {
+  generateRandomBoard(size, countObstacles, maxAttempts = 10) {
+    if (maxAttempts === 0) {
+      throw new Error('Unable to generate a solvable board.');
+    }
+  
     this.board.generateRandomBoard(size, countObstacles);
     console.log("Model: generating board...");
     this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
-    const graph = this.generateAdjacencyList(this.board.size*2);
+    const graph = this.generateAdjacencyList(this.board.size * 2);
     console.log(graph);
-    console.log(this.isBoardSolvable(graph));
+  
+    if (!this.isBoardSolvable(graph)) {
+      this.clearBoard();
+      this.generateRandomBoard(size, countObstacles, maxAttempts - 1);
+    }
   }
 
   resetBoard() {
@@ -32,7 +40,7 @@ export class Model {
   }
 
   initialize() {
-    this.generateRandomBoard(5, 6);
+    this.generateRandomBoard(8, 10);
   }
 
   handleKeyPress(data) {
@@ -100,14 +108,10 @@ export class Model {
   }
   
   isBoardSolvable(graph) {
-    let isFinishInGraph = false;
-    for (const [key, value] of Object.entries(graph)) {
-      value.forEach(e => {
-        if (e[0]===this.board.finish.getX() && e[1]===this.board.finish.getY()) {
-          isFinishInGraph = true;
-        }
-      });
-    }
-    return isFinishInGraph;
+    return Object.values(graph).some(neighbors =>
+      Array.from(neighbors).some(neighbor =>
+        neighbor[0] === this.board.finish.getX() && neighbor[1] === this.board.finish.getY()
+      )
+    );
   }
 }
