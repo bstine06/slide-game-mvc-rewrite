@@ -16,7 +16,9 @@ export class Model {
     this.board.generateRandomBoard(size, countObstacles);
     console.log("Model: generating board...");
     this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
-    console.log(this.generateAdjacencyList(5));
+    const graph = this.generateAdjacencyList(this.board.size*2);
+    console.log(graph);
+    console.log(this.isBoardSolvable(graph));
   }
 
   resetBoard() {
@@ -95,5 +97,17 @@ export class Model {
     if (downMove && !(downMove[0]===currentXY[0] && downMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, downMove, depth);
     if (leftMove && !(leftMove[0]===currentXY[0] && leftMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, leftMove, depth);
     if (rightMove && !(rightMove[0]===currentXY[0] && rightMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, rightMove, depth);
+  }
+  
+  isBoardSolvable(graph) {
+    let isFinishInGraph = false;
+    for (const [key, value] of Object.entries(graph)) {
+      value.forEach(e => {
+        if (e[0]===this.board.finish.getX() && e[1]===this.board.finish.getY()) {
+          isFinishInGraph = true;
+        }
+      });
+    }
+    return isFinishInGraph;
   }
 }
