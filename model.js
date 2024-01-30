@@ -1,5 +1,5 @@
-import { EventDispatcher } from './eventDispatcher.js';
 import { Board } from './modules/board.js';
+import { CoordinateSet } from './modules/coordinateSet.js';
 
 export class Model {
   constructor(controller, eventDispatcher) {
@@ -16,6 +16,7 @@ export class Model {
     this.board.generateRandomBoard(size, countObstacles);
     console.log("Model: generating board...");
     this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
+    console.log(this.generateAdjacencyList(5));
   }
 
   resetBoard() {
@@ -29,7 +30,7 @@ export class Model {
   }
 
   initialize() {
-    this.generateRandomBoard(30, 200);
+    this.generateRandomBoard(5, 6);
   }
 
   handleKeyPress(data) {
@@ -66,5 +67,33 @@ export class Model {
         }
         break;
     };
+  }
+
+  generateAdjacencyList(maxDepth) {
+    const graph = {};
+
+    this.generateGraphFromPosition(graph, this.board.player.getXY(), maxDepth);
+
+    return graph;
+  }
+  addNeighbor(graph, currentXY, newXY, maxDepth) {
+    if (!graph[currentXY]) {
+      graph[currentXY] = new CoordinateSet();
+    }
+    graph[currentXY].add(newXY);
+    this.generateGraphFromPosition(graph, newXY, maxDepth - 1);
+  }
+  generateGraphFromPosition(graph, currentXY, depth) {
+    if (depth <= 0) return;
+    const upMove = this.board.findUpMoveDestination(currentXY);
+    const downMove = this.board.findDownMoveDestination(currentXY);
+    const leftMove = this.board.findLeftMoveDestination(currentXY);
+    const rightMove = this.board.findRightMoveDestination(currentXY);
+
+    // Add neighbors based on available moves
+    if (upMove && !(upMove[0]===currentXY[0] && upMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, upMove, depth);
+    if (downMove && !(downMove[0]===currentXY[0] && downMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, downMove, depth);
+    if (leftMove && !(leftMove[0]===currentXY[0] && leftMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, leftMove, depth);
+    if (rightMove && !(rightMove[0]===currentXY[0] && rightMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, rightMove, depth);
   }
 }
