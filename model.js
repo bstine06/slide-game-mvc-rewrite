@@ -13,14 +13,17 @@ export class Model {
   }
 
   generateRandomBoard(size, countObstacles, maxAttempts = 10) {
+    if (countObstacles >= size*size-size) {
+      throw new Error(`Obstacle count must be less than size*size-size`);
+    }
+    
     if (maxAttempts === 0) {
-      throw new Error('Unable to generate a solvable board.');
+      console.error('Unable to generate a solvable board.');
     }
   
     this.board.generateRandomBoard(size, countObstacles);
     console.log("Model: generating board...");
-    this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
-    const graph = this.generateAdjacencyList(this.board.size * 2);
+    const graph = this.generateAdjacencyList(this.board.size);
     console.log(graph);
   
     if (!this.isBoardSolvable(graph)) {
@@ -40,7 +43,8 @@ export class Model {
   }
 
   initialize() {
-    this.generateRandomBoard(8, 10);
+    this.generateRandomBoard(15, 40);
+    this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
   }
 
   handleKeyPress(data) {

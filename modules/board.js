@@ -31,9 +31,6 @@ export class Board {
     this.resetToThisState = this.player.getXY();
   }
 
-
-
-
   findAvailableMoves(currentXY) {
     let availableMoves = [];
     availableMoves.push(this.findLeftMoveDestination(currentXY));
@@ -46,36 +43,56 @@ export class Board {
 
 
   findLeftMoveDestination(currentXY) {
-    return [this.getObstacleXYs().concat([[this.finish.getX()-1, this.finish.getY()]])
-                          .filter(obstacleXY => obstacleXY[1] === currentXY[1] && obstacleXY[0] < currentXY[0])
-                          .concat([[-1, currentXY[1]]])
-                          .sort((a,b) => (a[0]<b[0]) ? 1 : -1)
-                          [0][0]+1,currentXY[1]];
+    const obstacleXYs = this.getObstacleXYs();
+    const filteredObstacles = obstacleXYs
+      .filter(obstacleXY => obstacleXY[1] === currentXY[1] && obstacleXY[0] < currentXY[0])
+      .sort((a, b) => b[0] - a[0]);  // Sort in descending order
+  
+    const rightmostObstacleX = filteredObstacles.length > 0 ? filteredObstacles[0][0] : -1;
+    const finishX = (this.finish.getY() === currentXY[1] && this.finish.getX() < currentXY[0]) ? this.finish.getX()-1 : -1;
+    const leftMoveDestinationX = Math.max(rightmostObstacleX, -1, finishX) + 1;
+  
+    return [leftMoveDestinationX, currentXY[1]];
   }
+
   findRightMoveDestination(currentXY) {
-    return [this.getObstacleXYs().concat([[this.finish.getX()+1, this.finish.getY()]])
-                          .filter(obstacleXY => obstacleXY[1] === currentXY[1] && obstacleXY[0] > currentXY[0])
-                          .concat([[this.size, currentXY[1]]])
-                          .sort((a,b) => (a[0]>b[0]) ? 1 : -1)
-                          [0][0]-1,currentXY[1]];
+    const obstacleXYs = this.getObstacleXYs();
+    const filteredObstacles = obstacleXYs
+      .filter(obstacleXY => obstacleXY[1] === currentXY[1] && obstacleXY[0] > currentXY[0])
+      .sort((a, b) => a[0] - b[0]);  // Sort in ascending order
+  
+    const rightmostObstacleX = filteredObstacles.length > 0 ? filteredObstacles[0][0] : this.size;
+    const finishX = (this.finish.getY() === currentXY[1] && this.finish.getX() > currentXY[0]) ? this.finish.getX()+1 : this.size;
+    const rightMoveDestinationX = Math.min(rightmostObstacleX, this.size, finishX) - 1;
+  
+    return [rightMoveDestinationX, currentXY[1]];
   }
+  
   findUpMoveDestination(currentXY) {
-    return [currentXY[0], this.getObstacleXYs().concat([[this.finish.getX(), this.finish.getY()-1]])
-                          .filter(obstacleXY => obstacleXY[0] === currentXY[0] && obstacleXY[1] < currentXY[1])
-                          .concat([[currentXY[0], -1]])
-                          .sort((a,b) => (a[1]<b[1]) ? 1 : -1)
-                          [0][1]+1];
+    const obstacleXYs = this.getObstacleXYs();
+    const filteredObstacles = obstacleXYs
+      .filter(obstacleXY => obstacleXY[0] === currentXY[0] && obstacleXY[1] < currentXY[1])
+      .sort((a, b) => b[1] - a[1]);  // Sort in descending order
+  
+    const bottommostObstacleY = filteredObstacles.length > 0 ? filteredObstacles[0][1] : -1;
+    const finishY = (this.finish.getX() === currentXY[0] && this.finish.getY() < currentXY[1]) ? this.finish.getY()-1 : -1;
+    const rightMoveDestinationY = Math.max(bottommostObstacleY, -1, finishY) + 1;
+  
+    return [currentXY[0], rightMoveDestinationY];
   }
+
   findDownMoveDestination(currentXY) {
-    return [currentXY[0], this.getObstacleXYs().concat([[this.finish.getX(), this.finish.getY()+1]])
-                          .filter(obstacleXY => obstacleXY[0] === currentXY[0] && obstacleXY[1] > currentXY[1])
-                          .concat([[currentXY[0], this.size]])
-                          .sort((a,b) => (a[1]>b[1]) ? 1 : -1)
-                          [0][1]-1];
+    const obstacleXYs = this.getObstacleXYs();
+    const filteredObstacles = obstacleXYs
+      .filter(obstacleXY => obstacleXY[0] === currentXY[0] && obstacleXY[1] > currentXY[1])
+      .sort((a, b) => a[1] - b[1]);  // Sort in ascending order
+  
+    const topmostObstacleY = filteredObstacles.length > 0 ? filteredObstacles[0][1] : this.size;
+    const finishY = (this.finish.getX() === currentXY[0] && this.finish.getY() > currentXY[1]) ? this.finish.getY()+1 : this.size;
+    const rightMoveDestinationY = Math.min(topmostObstacleY, this.size, finishY) - 1;
+  
+    return [currentXY[0], rightMoveDestinationY];
   }
-
-
-
 
   findRandomUnoccupiedCoordinates() {
     let randomX = 0;
