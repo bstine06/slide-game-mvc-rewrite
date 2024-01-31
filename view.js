@@ -44,6 +44,10 @@ export class View {
     const startBtn = document.createElement('button');
     startBtn.textContent = 'start';
     startBtn.classList.add('start-btn');
+    startBtn.addEventListener('click', ()=>{
+      this.eventDispatcher.dispatchEvent('startBtnClicked', sizeSlider.value);
+      menuContainer.remove();
+    })
     menuContainer.appendChild(title);
     menuContainer.appendChild(sliderOutput);
     menuContainer.appendChild(sizeSlider);

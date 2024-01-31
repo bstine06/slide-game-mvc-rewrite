@@ -48,9 +48,10 @@ export class Model {
     this.board = new Board();
   }
 
-  createBoard() {
+  createBoard(size) {
     const startTime = performance.now();
-    this.generateRandomBoard(25, 100);
+    const obstacleCount = size*size/(Math.ceil(Math.random()*4)+2)
+    this.generateRandomBoard(size, obstacleCount);
     const endTime = performance.now();
     const executionTime = Math.ceil(endTime - startTime)/1000;
     console.log(`Model: Generated board in ${executionTime} seconds`)

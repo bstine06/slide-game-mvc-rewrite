@@ -17,6 +17,11 @@ class Controller {
       this.model.resetBoard();
     });
 
+    this.eventDispatcher.addEventListener('startBtnClicked', (boardSize) => {
+      console.log(`Controller: game initialized with size ${boardSize}`);
+      this.model.createBoard(boardSize, boardSize*boardSize/3);
+    })
+
     this.eventDispatcher.addEventListener('boardGenerated', (board) => {
         this.view.renderBoard(board);
     });
