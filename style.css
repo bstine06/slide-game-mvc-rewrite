@@ -1,13 +1,45 @@
+:root{
+  --game-container-dimension: min(100vw, 80vh, 1200px);
+}
+
 body {
   background-color: #181818;
   color: white;
+  margin: auto;
+  font-family: sans-serif;
+}
+
+.container {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
 }
 
 .game-container {
-  width: 600px;
-  height: 600px;
+  width: var(--game-container-dimension);
+  height: var(--game-container-dimension);
   background-color: #333;
   position: relative;
+}
+
+.menu-container {
+  display: flex;
+  padding-right: 30%;
+  padding-left: 30%;
+  justify-content: center;
+  flex-flow: row wrap;
+}
+
+.menu-container > * {
+  flex-basis: 100%;
+  text-align: center;
+}
+.size-slider {
+  flex-basis:60%;
+}
+.start-btn {
+  flex-basis: 80%;
 }
 
 .obstacle {

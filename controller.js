@@ -9,7 +9,7 @@ class Controller {
     this.view = new View(this, this.eventDispatcher);
 
     document.addEventListener('keydown', (event) => {
-      this.eventDispatcher.dispatchEvent('keyPressed', event.key);
+      this.handleKeyPress(event.key);
     });
 
     this.eventDispatcher.addEventListener('resetBtnClicked', (message) => {
@@ -35,10 +35,13 @@ class Controller {
     });
 
     // Now call the initialize method to generate the board
-    this.model.initialize();
+    this.view.renderMainMenu();
   }
 
   // Controller methods here
+  handleKeyPress(key) {
+    this.model.updateStateOnKeyPress(key)
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

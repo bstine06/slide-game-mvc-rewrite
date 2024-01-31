@@ -8,8 +8,8 @@ export class Model {
     this.eventDispatcher = eventDispatcher;
     this.finishAddedToGraph = false;
 
-    this.eventDispatcher.addEventListener('keyPressed', (data) => {
-      this.handleKeyPress(data);
+    this.eventDispatcher.addEventListener('startGame', (data) => {
+      this.createBoard(data);
     });
   }
 
@@ -48,7 +48,7 @@ export class Model {
     this.board = new Board();
   }
 
-  initialize() {
+  createBoard() {
     const startTime = performance.now();
     this.generateRandomBoard(25, 100);
     const endTime = performance.now();
@@ -57,8 +57,8 @@ export class Model {
     this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
   }
 
-  handleKeyPress(data) {
-    switch (data) {
+  updateStateOnKeyPress(key) {
+    switch (key) {
       case 'ArrowLeft': 
       case 'a':
         if (this.board.player.setXYifNew(this.board.findLeftMoveDestination(this.board.player.getXY()))){

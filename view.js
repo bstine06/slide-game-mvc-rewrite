@@ -14,12 +14,39 @@ export class View {
     this.gameContainer  = document.createElement('div');
     this.gameContainer.classList.add('game-container');
 
-    resetBtn.addEventListener('click', () => {
-      this.eventDispatcher.dispatchEvent('resetBtnClicked', 'Reset Button clicked');
-    });
+    // resetBtn.addEventListener('click', () => {
+    //   this.eventDispatcher.dispatchEvent('resetBtnClicked', 'Reset Button clicked');
+    // });
 
-    document.body.appendChild(resetBtn);
-    document.body.appendChild(this.gameContainer);
+    // document.body.appendChild(resetBtn);
+    document.querySelector('.container').appendChild(this.gameContainer);
+  }
+
+  renderMainMenu() {
+    const menuContainer = document.createElement('div');
+    menuContainer.classList.add('menu-container');
+    const title = document.createElement('h1');
+    title.textContent = 'slide';
+    title.classList.add('title');
+    const sliderOutput = document.createElement('p');
+    sliderOutput.textContent = '8x8 maze';
+    const sizeSlider = document.createElement('input');
+    sizeSlider.type = 'range';
+    sizeSlider.min = '8';
+    sizeSlider.max = '40';
+    sizeSlider.defaultValue = '12';
+    sizeSlider.classList.add('size-slider');
+    sizeSlider.oninput = function() {
+      sliderOutput.innerHTML = `${this.value}x${this.value} maze`;
+    }
+    const startBtn = document.createElement('button');
+    startBtn.textContent = 'start';
+    startBtn.classList.add('start-btn');
+    menuContainer.appendChild(title);
+    menuContainer.appendChild(sliderOutput);
+    menuContainer.appendChild(sizeSlider);
+    menuContainer.appendChild(startBtn);
+    this.gameContainer.appendChild(menuContainer);
   }
 
   renderBoard(board) {
