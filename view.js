@@ -29,15 +29,17 @@ export class View {
     title.textContent = 'slide';
     title.classList.add('title');
     const sliderOutput = document.createElement('p');
-    sliderOutput.textContent = '8x8 maze';
+    sliderOutput.textContent = '12x12 maze';
     const sizeSlider = document.createElement('input');
     sizeSlider.type = 'range';
     sizeSlider.min = '8';
-    sizeSlider.max = '40';
+    sizeSlider.max = '36';
     sizeSlider.defaultValue = '12';
     sizeSlider.classList.add('size-slider');
-    sizeSlider.oninput = function() {
-      sliderOutput.innerHTML = `${this.value}x${this.value} maze`;
+    sizeSlider.oninput = () => {
+      this.clearBoard();
+      sliderOutput.innerHTML = `${sizeSlider.value}x${sizeSlider.value} maze`;
+      this.renderPreview(sizeSlider.value);
     }
     const startBtn = document.createElement('button');
     startBtn.textContent = 'start';
@@ -46,7 +48,25 @@ export class View {
     menuContainer.appendChild(sliderOutput);
     menuContainer.appendChild(sizeSlider);
     menuContainer.appendChild(startBtn);
-    this.gameContainer.appendChild(menuContainer);
+    const container = document.querySelector('.container');
+    container.appendChild(menuContainer);
+    this.renderPreview(12);
+  }
+
+  renderPreview(size) {
+    this.sizingFactor = 100/size;
+    for (let x = 0; x < size; x++) {
+      for (let y = 0; y < size; y++) {
+        
+          const obstacleNode = document.createElement('div');
+          obstacleNode.classList.add('obstacle');
+          let lightness = Math.floor(Math.random() * 20 + 40);
+          obstacleNode.style.backgroundColor = `hsl(0,0%,${lightness}%)`;
+          obstacleNode.style.zIndex = Math.floor(Math.random()*3);
+          this.renderNodeSizeAndPosition(obstacleNode, x, y, true);
+        
+      }
+    }
   }
 
   renderBoard(board) {
@@ -74,16 +94,18 @@ export class View {
     this.renderNodeSizeAndPosition(finishNode, board.finish.getX(), board.finish.getY());
   }
 
-  renderNodeSizeAndPosition(node, x, y) {
+  renderNodeSizeAndPosition(node, x, y, isStatic) {
     node.style.height = this.sizingFactor + '%';
     node.style.width = this.sizingFactor + '%';
     node.style.left = x * this.sizingFactor + '%';
     node.style.top = y * this.sizingFactor + '%';
-    node.classList.add('incoming-animation');
+    if (!isStatic) node.classList.add('incoming-animation');
     this.gameContainer.appendChild(node);
-    setTimeout(() => {
-      node.classList.remove('incoming-animation');
-    }, 600);
+    {
+      setTimeout(() => {
+        node.classList.remove('incoming-animation');
+      }, 600);
+    }
   }
 
   resetBoard(board) {
