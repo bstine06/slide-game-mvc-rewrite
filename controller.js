@@ -18,7 +18,7 @@ class Controller {
     });
 
     this.eventDispatcher.addEventListener('boardGenerated', (board) => {
-      this.view.renderBoard(board);
+        this.view.renderBoard(board);
     });
 
     this.eventDispatcher.addEventListener('updateBoard', (board) => {

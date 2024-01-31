@@ -6,6 +6,7 @@ export class Model {
     this.board = new Board();
     this.controller = controller;
     this.eventDispatcher = eventDispatcher;
+    this.finishAddedToGraph = false;
 
     this.eventDispatcher.addEventListener('keyPressed', (data) => {
       this.handleKeyPress(data);
@@ -20,13 +21,18 @@ export class Model {
     if (maxAttempts === 0) {
       console.error('Unable to generate a solvable board.');
     }
-  
+
+    let msg = "Model: generating board..."
+    switch (maxAttempts) {
+      case 9 : msg = "Model: making sure it's solvable..."; break;
+      case 8 : msg = "Model: sometimes it takes a little while..."; break;
+    }
+    console.log(msg);
+    
     this.board.generateRandomBoard(size, countObstacles);
-    console.log("Model: generating board...");
-    const graph = this.generateAdjacencyList(this.board.size);
-    console.log(graph);
+    this.generateAdjacencyListUntilFinishIsFound(this.board.size, performance.now());
   
-    if (!this.isBoardSolvable(graph)) {
+    if (!this.finishAddedToGraph) {
       this.clearBoard();
       this.generateRandomBoard(size, countObstacles, maxAttempts - 1);
     }
@@ -43,7 +49,11 @@ export class Model {
   }
 
   initialize() {
-    this.generateRandomBoard(15, 40);
+    const startTime = performance.now();
+    this.generateRandomBoard(25, 100);
+    const endTime = performance.now();
+    const executionTime = Math.ceil(endTime - startTime)/1000;
+    console.log(`Model: Generated board in ${executionTime} seconds`)
     this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
   }
 
@@ -74,7 +84,7 @@ export class Model {
         };
         break;
       case 'b':
-      case 'e':
+      case 'Shift':
         let explodedItemIds = this.board.triggerExplosion();
         if (explodedItemIds.length > 0) {
           this.eventDispatcher.dispatchEvent('explosionTriggered', explodedItemIds);
@@ -83,32 +93,50 @@ export class Model {
     };
   }
 
-  generateAdjacencyList(maxDepth) {
+  generateAdjacencyListUntilFinishIsFound(maxDepth) {
     const graph = {};
 
-    this.generateGraphFromPosition(graph, this.board.player.getXY(), maxDepth);
+    this.generateGraphFromPosition(graph, this.board.player.getXY(), maxDepth, performance.now());
 
     return graph;
   }
-  addNeighbor(graph, currentXY, newXY, maxDepth) {
+
+  addNeighbor(graph, currentXY, newXY, maxDepth, startTime) {
+    if (this.finishAddedToGraph) {
+      return;
+    }
+    if (performance.now() - startTime > 1000) {
+      return;
+    }
     if (!graph[currentXY]) {
       graph[currentXY] = new CoordinateSet();
     }
     graph[currentXY].add(newXY);
-    this.generateGraphFromPosition(graph, newXY, maxDepth - 1);
+    this.generateGraphFromPosition(graph, newXY, maxDepth - 1, startTime);
   }
-  generateGraphFromPosition(graph, currentXY, depth) {
-    if (depth <= 0) return;
+  generateGraphFromPosition(graph, currentXY, depth, startTime) {
+    if (depth <= 0 || this.finishAddedToGraph) return;
     const upMove = this.board.findUpMoveDestination(currentXY);
     const downMove = this.board.findDownMoveDestination(currentXY);
     const leftMove = this.board.findLeftMoveDestination(currentXY);
     const rightMove = this.board.findRightMoveDestination(currentXY);
 
+    const moves = [upMove, downMove, leftMove, rightMove];
+    if (!this.finishAddedToGraph) {
+      if (moves.some((m) => m[0]===this.board.finish.getX() && m[1]===this.board.finish.getY())) {
+        this.finishAddedToGraph = true;
+        return;
+      }
+    }
+    if (performance.now() - startTime > 1000) {
+      return;
+    }
+
     // Add neighbors based on available moves
-    if (upMove && !(upMove[0]===currentXY[0] && upMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, upMove, depth);
-    if (downMove && !(downMove[0]===currentXY[0] && downMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, downMove, depth);
-    if (leftMove && !(leftMove[0]===currentXY[0] && leftMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, leftMove, depth);
-    if (rightMove && !(rightMove[0]===currentXY[0] && rightMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, rightMove, depth);
+    if (upMove && !(upMove[0]===currentXY[0] && upMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, upMove, depth, startTime);
+    if (downMove && !(downMove[0]===currentXY[0] && downMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, downMove, depth, startTime);
+    if (leftMove && !(leftMove[0]===currentXY[0] && leftMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, leftMove, depth, startTime);
+    if (rightMove && !(rightMove[0]===currentXY[0] && rightMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, rightMove, depth, startTime);
   }
   
   isBoardSolvable(graph) {
