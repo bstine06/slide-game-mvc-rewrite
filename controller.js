@@ -45,7 +45,7 @@ class Controller {
 
   // Controller methods here
   handleKeyPress(key) {
-    this.model.updateStateOnKeyPress(key)
+    this.model.updateStateOnKeyPress(key);
   }
 }
 

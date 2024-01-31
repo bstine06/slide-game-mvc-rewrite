@@ -7,6 +7,7 @@ export class Model {
     this.controller = controller;
     this.eventDispatcher = eventDispatcher;
     this.finishAddedToGraph = false;
+    this.size;
 
     this.eventDispatcher.addEventListener('startGame', (data) => {
       this.createBoard(data);
@@ -46,9 +47,12 @@ export class Model {
 
   clearBoard() {
     this.board = new Board();
+    this.finishAddedToGraph = false;
   }
 
   createBoard(size) {
+    this.clearBoard();
+    this.size = size;
     const startTime = performance.now();
     const obstacleCount = size*size/(Math.ceil(Math.random()*4)+2)
     this.generateRandomBoard(size, obstacleCount);
@@ -85,12 +89,16 @@ export class Model {
         };
         break;
       case 'b':
-      case 'Shift':
         let explodedItemIds = this.board.triggerExplosion();
         if (explodedItemIds.length > 0) {
           this.eventDispatcher.dispatchEvent('explosionTriggered', explodedItemIds);
         }
         break;
+      case 'Shift':
+        this.resetBoard();
+        break;
+      case 'Enter':
+        this.createBoard(this.size);
     };
   }
 
