@@ -29,9 +29,9 @@ body {
   transform: translateY(-50%);
   position: absolute;
   display: flex;
-  margin-right: 30%;
-  margin-left: 30%;
-  padding-bottom: 5%;
+  margin-right: 7%;
+  margin-left: 7%;
+  padding-bottom: 22px;
   justify-content: center;
   flex-flow: row wrap;
   z-index: 200;
@@ -82,8 +82,8 @@ h1 {
 }
 
 .start-btn {
-  flex-basis: 80%;
   margin-top: 12px;
+  max-width: min(200px, 80%);
 }
 
 .obstacle {
