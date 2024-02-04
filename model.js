@@ -10,6 +10,7 @@ export class Model {
     this.size;
     this.timer = 100;
     this.isTimerOn = false;
+    this.countLevelsFinished = 0;
 
     this.eventDispatcher.addEventListener('startGame', (data) => {
       this.createBoard(data);
@@ -125,8 +126,13 @@ export class Model {
   dispatchFinish() {
     this.stopTimer();
     this.updateTimer(2);
+    this.countLevelsFinished++;
+    const finishData = {
+      boardSize : this.board.size,
+      countLevelsFinished : this.countLevelsFinished
+    }
     setTimeout(()=>{
-      this.eventDispatcher.dispatchEvent('levelFinished', this.board);
+      this.eventDispatcher.dispatchEvent('levelFinished', finishData);
     }, 300);
   }
 

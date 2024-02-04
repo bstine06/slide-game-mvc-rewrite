@@ -140,7 +140,9 @@ export class View {
     });
   }
 
-  finishLevel() {
+  finishLevel(countLevelsFinished) {
+    const timer = document.querySelector('.time-bar');
+    timer.textContent = ` Levels finished: ${countLevelsFinished}`;
 
     const loadingIconContainer = document.createElement('div');
     loadingIconContainer.classList.add('loading-icon-container');

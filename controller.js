@@ -30,10 +30,10 @@ class Controller {
       this.view.resetBoard(board);
     });
 
-    this.eventDispatcher.addEventListener('levelFinished', (board) => {
-      this.view.finishLevel();
+    this.eventDispatcher.addEventListener('levelFinished', (finishData) => {
+      this.view.finishLevel(finishData['countLevelsFinished']);
       setTimeout(()=>{
-        this.model.createBoard(board.size);
+        this.model.createBoard(finishData['boardSize']);
       }, 100);
     })
 
