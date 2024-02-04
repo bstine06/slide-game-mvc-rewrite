@@ -112,10 +112,10 @@ export class Board {
     this.player.setXY(this.resetToThisState);
   }
   finishLevel(){
-    if (this.player.getX() !== this.finish.getX() || this.player.getY() !== this.finish.getY()) return;
-    setTimeout(()=>{
-      this.animateFinish();
-    }, "280");
+    if (this.player.getX() === this.finish.getX() && this.player.getY() === this.finish.getY()) {
+        return true;
+    }
+    return false;
   }
   animateFinish(){
     this.player.style.backgroundColor = "rgb(26, 175, 26)";

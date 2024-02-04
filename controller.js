@@ -30,6 +30,13 @@ class Controller {
       this.view.resetBoard(board);
     });
 
+    this.eventDispatcher.addEventListener('levelFinished', (board) => {
+      this.view.finishLevel();
+      setTimeout(()=>{
+        this.model.createBoard(board.size);
+      }, 100);
+    })
+
     this.eventDispatcher.addEventListener('explosionTriggered', (explodedItemIds) => {
       this.view.explode(explodedItemIds);
     })

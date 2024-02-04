@@ -121,6 +121,8 @@ export class View {
 
   clearBoard() {
     this.gameContainer.innerHTML = '';
+    const loadingIcon = document.querySelector('.loading-icon-container');
+    if (loadingIcon) loadingIcon.remove();
   }
 
   updatePlayerXY(newXY) {
@@ -136,5 +138,22 @@ export class View {
         obstacleNode.style.display = 'none';
       }, 280);
     });
+  }
+
+  finishLevel() {
+    const loadingIconContainer = document.createElement('div');
+    loadingIconContainer.classList.add('loading-icon-container');
+
+    const loadingIcon = document.createElement('div');
+    loadingIcon.classList.add('lds-circle');
+    loadingIcon.appendChild(document.createElement('div'));
+
+    const loadingText = document.createElement('h3');
+    loadingText.textContent = 'loading...';
+
+    const container = document.querySelector('.container');
+    loadingIconContainer.appendChild(loadingIcon);
+    loadingIconContainer.appendChild(loadingText);
+    container.appendChild(loadingIconContainer);
   }
 }

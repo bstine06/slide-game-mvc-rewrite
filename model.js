@@ -14,20 +14,12 @@ export class Model {
     });
   }
 
-  generateRandomBoard(size, countObstacles, maxAttempts = 10) {
+  generateRandomBoard(size, countObstacles) {
     if (countObstacles >= size*size-size) {
       throw new Error(`Obstacle count must be less than size*size-size`);
     }
-    
-    if (maxAttempts === 0) {
-      console.error('Unable to generate a solvable board.');
-    }
 
     let msg = "Model: generating board..."
-    switch (maxAttempts) {
-      case 9 : msg = "Model: making sure it's solvable..."; break;
-      case 8 : msg = "Model: sometimes it takes a little while..."; break;
-    }
     console.log(msg);
     
     this.board.generateRandomBoard(size, countObstacles);
@@ -35,7 +27,7 @@ export class Model {
   
     if (!this.finishAddedToGraph) {
       this.clearBoard();
-      this.generateRandomBoard(size, countObstacles, maxAttempts - 1);
+      this.generateRandomBoard(size, countObstacles);
     }
   }
 
@@ -69,24 +61,28 @@ export class Model {
         if (this.board.player.setXYifNew(this.board.findLeftMoveDestination(this.board.player.getXY()))){
           this.eventDispatcher.dispatchEvent('updatePlayerXY', this.board.player.getXY());
         };
+        if (this.board.finishLevel()) this.dispatchFinish();
         break;
       case 'ArrowRight':
       case 'd':
         if (this.board.player.setXYifNew(this.board.findRightMoveDestination(this.board.player.getXY()))){
           this.eventDispatcher.dispatchEvent('updatePlayerXY', this.board.player.getXY());
         };
+        if (this.board.finishLevel()) this.dispatchFinish();
         break;
       case 'ArrowUp':
       case 'w':
         if (this.board.player.setXYifNew(this.board.findUpMoveDestination(this.board.player.getXY()))){
           this.eventDispatcher.dispatchEvent('updatePlayerXY', this.board.player.getXY());
         };
+        if (this.board.finishLevel()) this.dispatchFinish();
         break;
       case 'ArrowDown':
       case 's':
         if (this.board.player.setXYifNew(this.board.findDownMoveDestination(this.board.player.getXY()))){
           this.eventDispatcher.dispatchEvent('updatePlayerXY', this.board.player.getXY());
         };
+        if (this.board.finishLevel()) this.dispatchFinish();
         break;
       case 'b':
         let explodedItemIds = this.board.triggerExplosion();
@@ -98,9 +94,17 @@ export class Model {
         this.resetBoard();
         break;
       case 'Enter':
-        this.createBoard(this.size);
+        // this.createBoard(this.size);
     };
   }
+  
+  dispatchFinish() {
+    setTimeout(()=>{
+      this.eventDispatcher.dispatchEvent('levelFinished', this.board);
+    }, 300);
+  }
+
+  //this.createBoard(this.size);
 
   generateAdjacencyListUntilFinishIsFound(maxDepth) {
     const graph = {};
@@ -148,11 +152,11 @@ export class Model {
     if (rightMove && !(rightMove[0]===currentXY[0] && rightMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, rightMove, depth, startTime);
   }
   
-  isBoardSolvable(graph) {
-    return Object.values(graph).some(neighbors =>
-      Array.from(neighbors).some(neighbor =>
-        neighbor[0] === this.board.finish.getX() && neighbor[1] === this.board.finish.getY()
-      )
-    );
-  }
+  // isBoardSolvable(graph) {
+  //   return Object.values(graph).some(neighbors =>
+  //     Array.from(neighbors).some(neighbor =>
+  //       neighbor[0] === this.board.finish.getX() && neighbor[1] === this.board.finish.getY()
+  //     )
+  //   );
+  // }
 }

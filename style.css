@@ -164,3 +164,42 @@ h1 {
     opacity: 100%;
   }
 }
+
+.loading-icon-container {
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+  z-index:500;
+  background-color: black;
+  padding: 40px;
+  border-radius: 20%;
+}
+
+.lds-circle {
+  flex-grow: 100%;
+}
+
+.lds-circle > div {
+  display: inline-block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  background: #aaa;
+  animation: lds-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+@keyframes lds-circle {
+  0%, 100% {
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+  }
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(1800deg);
+    animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+  }
+  100% {
+    transform: rotateY(3600deg);
+  }
+}
