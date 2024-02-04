@@ -124,7 +124,7 @@ export class Model {
   
   dispatchFinish() {
     this.stopTimer();
-    this.updateTimer(+2);
+    this.updateTimer(2);
     setTimeout(()=>{
       this.eventDispatcher.dispatchEvent('levelFinished', this.board);
     }, 300);

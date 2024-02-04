@@ -31,6 +31,7 @@ class Controller {
     });
 
     this.eventDispatcher.addEventListener('levelFinished', (board) => {
+      this.view.finishLevel();
       setTimeout(()=>{
         this.model.createBoard(board.size);
       }, 100);
