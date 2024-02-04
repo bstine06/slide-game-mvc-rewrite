@@ -8,6 +8,8 @@ export class Model {
     this.eventDispatcher = eventDispatcher;
     this.finishAddedToGraph = false;
     this.size;
+    this.timer = 100;
+    this.isTimerOn = false;
 
     this.eventDispatcher.addEventListener('startGame', (data) => {
       this.createBoard(data);
@@ -52,7 +54,28 @@ export class Model {
     const executionTime = Math.ceil(endTime - startTime)/1000;
     console.log(`Model: Generated board in ${executionTime} seconds`)
     this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
+    this.startTimer();
   }
+
+  startTimer() {
+    this.isTimerOn = true;
+    this.timerInterval = setInterval(() => this.updateTimer(-2), 1000);
+  }
+
+  stopTimer() {
+      this.isTimerOn = false;
+      clearInterval(this.timerInterval);
+  }
+
+  updateTimer(amount) {
+    if (this.timer <= 0) {
+      this.stopTimer();
+  } else {
+      this.timer += amount;
+      this.eventDispatcher.dispatchEvent('timeUpdated', this.timer);
+  }
+  }
+
 
   updateStateOnKeyPress(key) {
     switch (key) {
@@ -90,7 +113,8 @@ export class Model {
           this.eventDispatcher.dispatchEvent('explosionTriggered', explodedItemIds);
         }
         break;
-      case 'Shift':
+      case ' ':
+        this.updateTimer(-2);
         this.resetBoard();
         break;
       case 'Enter':
@@ -99,6 +123,8 @@ export class Model {
   }
   
   dispatchFinish() {
+    this.stopTimer();
+    this.updateTimer(+2);
     setTimeout(()=>{
       this.eventDispatcher.dispatchEvent('levelFinished', this.board);
     }, 300);

@@ -141,6 +141,7 @@ export class View {
   }
 
   finishLevel() {
+
     const loadingIconContainer = document.createElement('div');
     loadingIconContainer.classList.add('loading-icon-container');
 
@@ -155,5 +156,10 @@ export class View {
     loadingIconContainer.appendChild(loadingIcon);
     loadingIconContainer.appendChild(loadingText);
     container.appendChild(loadingIconContainer);
+  }
+
+  updateTimer(time) {
+    const timer = document.querySelector('.time-bar');
+    timer.style.width = time + "%";
   }
 }

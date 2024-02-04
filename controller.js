@@ -31,7 +31,6 @@ class Controller {
     });
 
     this.eventDispatcher.addEventListener('levelFinished', (board) => {
-      this.view.finishLevel();
       setTimeout(()=>{
         this.model.createBoard(board.size);
       }, 100);
@@ -45,6 +44,10 @@ class Controller {
       console.log(`Controller: updating player XY to ${newXY}`);
       this.view.updatePlayerXY(newXY);
     });
+
+    this.eventDispatcher.addEventListener('timeUpdated', (time) => {
+      this.view.updateTimer(time);
+    })
 
     // Now call the initialize method to generate the board
     this.view.renderMainMenu();
