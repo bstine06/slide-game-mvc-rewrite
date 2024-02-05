@@ -17,6 +17,28 @@ export class Model {
     });
   }
 
+  /* board manipulation functions */
+
+  createBoard(size) {
+    let playerStartXY;
+    if (this.board.player === undefined) {
+      playerStartXY = this.board.findRandomCoordinatesOnBoardOfSize(size);
+    } else {
+      playerStartXY = this.board.player.getXY();
+    }
+    console.log(`in model:creatBoard. playerStartXY:${playerStartXY}`)
+    this.clearBoard();
+    this.size = size;
+    const startTime = performance.now();
+    const obstacleCount = size*size/(Math.ceil(Math.random()*4)+2)
+    this.generateRandomBoard(size, obstacleCount, playerStartXY);
+    const endTime = performance.now();
+    const executionTime = Math.ceil(endTime - startTime)/1000;
+    console.log(`Model: Generated board in ${executionTime} seconds`)
+    this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
+    this.startTimer();
+  }
+
   generateRandomBoard(size, countObstacles, playerStartXY) {
     if (countObstacles >= size*size-size) {
       throw new Error(`Obstacle count must be less than size*size-size`);
@@ -45,25 +67,7 @@ export class Model {
     this.finishAddedToGraph = false;
   }
 
-  createBoard(size) {
-    let playerStartXY;
-    if (this.board.player === undefined) {
-      playerStartXY = this.board.findRandomCoordinatesOnBoardOfSize(size);
-    } else {
-      playerStartXY = this.board.player.getXY();
-    }
-    console.log(`in model:creatBoard. playerStartXY:${playerStartXY}`)
-    this.clearBoard();
-    this.size = size;
-    const startTime = performance.now();
-    const obstacleCount = size*size/(Math.ceil(Math.random()*4)+2)
-    this.generateRandomBoard(size, obstacleCount, playerStartXY);
-    const endTime = performance.now();
-    const executionTime = Math.ceil(endTime - startTime)/1000;
-    console.log(`Model: Generated board in ${executionTime} seconds`)
-    this.eventDispatcher.dispatchEvent('boardGenerated', this.board);
-    this.startTimer();
-  }
+  /* timer functions */
 
   startTimer() {
     this.isTimerOn = true;
@@ -85,6 +89,7 @@ export class Model {
   }
   }
 
+  /* keypress handler functions */
 
   updateStateOnKeyPress(key) {
     switch (key) {
@@ -126,8 +131,6 @@ export class Model {
         this.updateTimer(-2);
         this.resetBoard();
         break;
-      case 'Enter':
-        // this.createBoard(this.size);
     };
   }
   
@@ -144,7 +147,8 @@ export class Model {
     }, 300);
   }
 
-  //this.createBoard(this.size);
+
+  /* check maze solvability functions */
 
   generateAdjacencyListUntilFinishIsFound(maxDepth) {
     const graph = {};
@@ -167,6 +171,7 @@ export class Model {
     graph[currentXY].add(newXY);
     this.generateGraphFromPosition(graph, newXY, maxDepth - 1, startTime);
   }
+
   generateGraphFromPosition(graph, currentXY, depth, startTime) {
     if (depth <= 0 || this.finishAddedToGraph) return;
     const upMove = this.board.findUpMoveDestination(currentXY);
@@ -185,18 +190,10 @@ export class Model {
       return;
     }
 
-    // Add neighbors based on available moves
     if (upMove && !(upMove[0]===currentXY[0] && upMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, upMove, depth, startTime);
     if (downMove && !(downMove[0]===currentXY[0] && downMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, downMove, depth, startTime);
     if (leftMove && !(leftMove[0]===currentXY[0] && leftMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, leftMove, depth, startTime);
     if (rightMove && !(rightMove[0]===currentXY[0] && rightMove[1]===currentXY[1])) this.addNeighbor(graph, currentXY, rightMove, depth, startTime);
   }
   
-  // isBoardSolvable(graph) {
-  //   return Object.values(graph).some(neighbors =>
-  //     Array.from(neighbors).some(neighbor =>
-  //       neighbor[0] === this.board.finish.getX() && neighbor[1] === this.board.finish.getY()
-  //     )
-  //   );
-  // }
 }

@@ -50,7 +50,6 @@ class Controller {
       this.view.updateTimer(time);
     })
 
-    // Now call the initialize method to generate the board
     this.view.renderMainMenu();
   }
 

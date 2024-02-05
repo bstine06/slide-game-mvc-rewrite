@@ -13,12 +13,6 @@ export class View {
     resetBtn.textContent = 'reset';
     this.gameContainer  = document.createElement('div');
     this.gameContainer.classList.add('game-container');
-
-    // resetBtn.addEventListener('click', () => {
-    //   this.eventDispatcher.dispatchEvent('resetBtnClicked', 'Reset Button clicked');
-    // });
-
-    // document.body.appendChild(resetBtn);
     document.querySelector('.container').appendChild(this.gameContainer);
   }
 
@@ -116,7 +110,6 @@ export class View {
     console.log('View: updating board render...');
     this.updatePlayerXY(board.player.getXY());
     this.renderBoard(board);
-    // board.obstacles.forEach((o) => o.id)
   }
 
   clearBoard() {

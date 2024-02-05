@@ -30,21 +30,6 @@ export class Item {
   getXY(){
     return [this.x, this.y];
   }
-
-  // eraseWithAnimation(){
-  //   this.node.classList.add("outgoing-animation");
-  //   setTimeout(() => {
-  //     this.node.parentNode.removeChild(this.node);
-  //     this.node.classList.remove("outgoing-animation");
-  //   }, "280");
-  // }
-  // displayWithAnimation(){
-  //   this.node.classList.add("incoming-animation");
-  //   this.gameDomElement.appendChild(this.node);
-  //   setTimeout(() => {
-  //     this.node.classList.remove("incoming-animation");
-  //   }, "280");
-  // }
 }
 
 export class Obstacle extends Item {
