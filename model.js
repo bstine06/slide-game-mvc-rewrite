@@ -60,7 +60,7 @@ export class Model {
 
   startTimer() {
     this.isTimerOn = true;
-    this.timerInterval = setInterval(() => this.updateTimer(-2), 1000);
+    this.timerInterval = setInterval(() => this.updateTimer(-1), 1000);
   }
 
   stopTimer() {
@@ -73,6 +73,7 @@ export class Model {
       this.stopTimer();
   } else {
       this.timer += amount;
+      if (this.timer > 30) this.timer += amount; // timer moves slower as it dwindles
       this.eventDispatcher.dispatchEvent('timeUpdated', this.timer);
   }
   }
