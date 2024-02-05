@@ -9,24 +9,17 @@ export class Board {
     this.player;
     this.finish;
   }
-  generateRandomBoard(size, countObstacles) {
+  generateRandomBoard(size, countObstacles, playerStartXY) {
     this.size = size
     this.countObstacles = countObstacles;
     this.player = new Item("player");
     this.finish = new Item("finish");
+    this.player.setXY(playerStartXY);
     for (let i=0; i<this.countObstacles; i++) {
       let newObstacle = new Obstacle("obstacle", i);
       newObstacle.setXY(this.findRandomUnoccupiedCoordinates());
       this.obstacles.push(newObstacle);
     }
-    // this.obstacles.sort((a, b) => {
-    //   if (a.x !== b.x) {
-    //     return a.x - b.x;
-    //   } else {
-    //     return a.y - b.y;
-    //   }
-    // });
-    this.player.setXY(this.findRandomUnoccupiedCoordinates());
     this.finish.setXY(this.findRandomUnoccupiedCoordinates());
     this.resetToThisState = this.player.getXY();
   }
@@ -103,6 +96,13 @@ export class Board {
     } while (this.getObstacleXYs().concat([this.player.getXY()]).filter((e)=>(e[0]===randomX && e[1]===randomY)).length!==0);
     return [randomX,randomY];
   }
+
+  findRandomCoordinatesOnBoardOfSize(size) {
+    const randomX = Math.floor(Math.random()*size);
+    const randomY = Math.floor(Math.random()*size);
+    return [randomX,randomY];
+  }
+
   getObstacleXYs(){
     return this.obstacles.filter(o => o.isOn === true).map(o => o.getXY());
   }

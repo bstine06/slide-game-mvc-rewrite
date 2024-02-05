@@ -17,7 +17,7 @@ export class Model {
     });
   }
 
-  generateRandomBoard(size, countObstacles) {
+  generateRandomBoard(size, countObstacles, playerStartXY) {
     if (countObstacles >= size*size-size) {
       throw new Error(`Obstacle count must be less than size*size-size`);
     }
@@ -25,12 +25,12 @@ export class Model {
     let msg = "Model: generating board..."
     console.log(msg);
     
-    this.board.generateRandomBoard(size, countObstacles);
+    this.board.generateRandomBoard(size, countObstacles, playerStartXY);
     this.generateAdjacencyListUntilFinishIsFound(this.board.size, performance.now());
   
     if (!this.finishAddedToGraph) {
       this.clearBoard();
-      this.generateRandomBoard(size, countObstacles);
+      this.generateRandomBoard(size, countObstacles, playerStartXY);
     }
   }
 
@@ -46,11 +46,18 @@ export class Model {
   }
 
   createBoard(size) {
+    let playerStartXY;
+    if (this.board.player === undefined) {
+      playerStartXY = this.board.findRandomCoordinatesOnBoardOfSize(size);
+    } else {
+      playerStartXY = this.board.player.getXY();
+    }
+    console.log(`in model:creatBoard. playerStartXY:${playerStartXY}`)
     this.clearBoard();
     this.size = size;
     const startTime = performance.now();
     const obstacleCount = size*size/(Math.ceil(Math.random()*4)+2)
-    this.generateRandomBoard(size, obstacleCount);
+    this.generateRandomBoard(size, obstacleCount, playerStartXY);
     const endTime = performance.now();
     const executionTime = Math.ceil(endTime - startTime)/1000;
     console.log(`Model: Generated board in ${executionTime} seconds`)
